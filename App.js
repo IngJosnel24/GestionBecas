@@ -1,8 +1,7 @@
-import * as React from 'react';
-import Navigation from './src/navegacion/navegacion';
+// App.js
+import React from 'react';
+import Navegacion from './src/navegacion/navegacion';
 
 export default function App() {
-  return (
-    <Navigation></Navigation>
-  );
+  return <Navegacion />;
 }
