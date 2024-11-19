@@ -1,50 +1,131 @@
-// App.js
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from 'react-native-vector-icons';
+import { NavigationContainer } from '@react-navigation/native';
 
-import ListaBecas from '../screens/ListaBeca';
-import DetalleBeca from '../screens/DetalleBeca';
-import FormularioSolicitud from '../screens/FormularioSolicitud';
-import MisSolicitudes from '../screens/MisSolicitudes';
+
 import Estadisticas from '../screens/Estadisticas';
+import MisSolicitudes from '../screens/MisSolicitudes';
 
-const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function InicioStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="ListaBecas" component={ListaBecas} options={{ title: 'Becas Disponibles' }} />
-      <Stack.Screen name="DetalleBeca" component={DetalleBeca} options={{ title: 'Detalles de la Beca' }} />
-      <Stack.Screen name="FormularioSolicitud" component={FormularioSolicitud} options={{ title: 'Formulario de Solicitud' }} />
-    </Stack.Navigator>
-  );
+function MyTabs() {
+  
 }
 
-export default function App() {
+const Estadisticas_Screen = () => (
+  <View style={styles.screenContainer}>
+  
+  </View>
+);
+
+const ListaBecas = () => {
+  const [searchText, setSearchText] = useState('');
+
+  const handleSearch = (text) => {
+    setSearchText(text);
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* Título */}
+      <Text style={styles.titulo}>Listado de Becas</Text>
+
+      {/* Barra de búsqueda */}
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={24} color="gray" style={styles.icon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Buscar beca o estudiante..."
+          value={searchText}
+          onChangeText={handleSearch}
+        />
+        <TouchableOpacity>
+          <Ionicons name="filter" size={24} color="gray" style={styles.icon} />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
+const App = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName="Inicio"
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }) => {
-            let iconName;
-            if (route.name === 'Inicio') iconName = 'home';
-            else if (route.name === 'MisSolicitudes') iconName = 'list';
-            else if (route.name === 'Estadisticas') iconName = 'bar-chart';
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: 'tomato',
-          tabBarInactiveTintColor: 'gray',
-        })}
+        screenOptions={{
+          tabBarStyle: { backgroundColor: '#fff' },
+          tabBarLabelStyle: { fontSize: 12, color: 'tomato' },
+        }}
       >
-        <Tab.Screen name="Inicio" component={InicioStack} options={{ title: 'Inicio' }} />
-        <Tab.Screen name="MisSolicitudes" component={MisSolicitudes} options={{ title: 'Mis Solicitudes' }} />
-        <Tab.Screen name="Estadisticas" component={Estadisticas} options={{ title: 'Estadísticas' }} />
+        <Tab.Screen
+          name="Inicio"
+          component={ListaBecas}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Solicitudes"
+          component={MisSolicitudes}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="list" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Estadísticas"
+          component={Estadisticas}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="bar-chart" size={size} color={color} />
+            ),
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 16,
+    backgroundColor: '#f5f5f5',
+  },
+  titulo: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 16,
+    marginTop: 30,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    marginTop: 10,
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 20,
+    marginRight: 8,
+  },
+  icon: {
+    marginHorizontal: 8,
+  },
+  screenContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default App;
