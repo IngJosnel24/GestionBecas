@@ -7,6 +7,8 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import Estadisticas from '../screens/Estadisticas';
 import MisSolicitudes from '../screens/MisSolicitudes';
+import ListadoSolicitudes from '../screens/Listadosolicitudes';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -73,6 +75,15 @@ const App = () => {
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="list" size={size} color={color} />
+            ),
+          }}
+          ></Tab.Screen>
+          <Tab.Screen
+          name="Listadosolicitudes"
+          component={ListadoSolicitudes}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="menu" size={size} color={color} />
             ),
           }}
         />

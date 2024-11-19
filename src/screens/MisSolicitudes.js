@@ -90,14 +90,18 @@ export default function MisSolicitudes() {
         }
     };
 
-    const guardarSolicitud = async (Solicitantes) => {
-      try {
-          const docRef = await addDoc(collection(db, "Solicitantes"), Solicitantes);
-          console.log("Documento escrito con ID: ", docRef.id);
-      } catch (e) {
-          console.error("Error al añadir el documento: ", e);
-      }
-  };
+   const guardarSolicitud = async (Solicitantes) => {
+    try {
+        const docRef = await addDoc(collection(db, "Solicitantes"), {
+            ...Solicitantes,
+            status: 'Pendiente', // Estado inicial de la solicitud
+        });
+        console.log("Documento escrito con ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error al añadir el documento: ", e);
+    }
+};
+
   
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -147,23 +151,33 @@ export default function MisSolicitudes() {
             </View>
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Carrera:</Text>
-                <TextInput
+                <Picker
+                    selectedValue={Solicitantes.carrera}
+                    onValueChange={(itemValue) => establecerEstado("carrera", itemValue)}
                     style={styles.TextInput}
-                    placeholder="Ingrese su carrera"
-                    value={Solicitantes.carrera}
-                    onChangeText={(value) => establecerEstado("carrera", value)}
-                />
-                {errors.carrera && <Text style={styles.errorText}>{errors.carrera}</Text>}
+                >
+                    <Picker.Item label="Seleccione su carrera" value="" />
+                    <Picker.Item label="Licenciatura en Derecho" value="Licenciatura en Derecho" />
+                    <Picker.Item label="MasculinoLicenciatura en Psicología" value="Licenciatura en Psicología" />
+                    <Picker.Item label="Ingeniería Civil" value="Ingeniería Civil" />
+                    <Picker.Item label="Ingeniería Informática" value="Ingeniería Informática" />
+                    <Picker.Item label="Medicina" value="Medicina" />
+                </Picker>
+                {errors.sexo && <Text style={styles.errorText}>{errors.sexo}</Text>}
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Tipo de Beca:</Text>
-                <TextInput
+                <Text style={styles.label}>Tipo de beca:</Text>
+                <Picker
+                    selectedValue={Solicitantes.beca}
+                    onValueChange={(itemValue) => establecerEstado("beca", itemValue)}
                     style={styles.TextInput}
-                    placeholder="Ingrese el tipo de beca"
-                    value={Solicitantes.beca}
-                    onChangeText={(value) => establecerEstado("beca", value)}
-                />
-                {errors.beca && <Text style={styles.errorText}>{errors.beca}</Text>}
+                >
+                    <Picker.Item label="Seleccione su carrera" value="" />
+                    <Picker.Item label="Académica" value="Académica" />
+                    <Picker.Item label="Transporte" value="Transporte" />
+                    <Picker.Item label="Interna" value="Interna" />
+                </Picker>
+                {errors.sexo && <Text style={styles.errorText}>{errors.sexo}</Text>}
             </View>
             <TouchableOpacity style={styles.button} onPress={pickImage}>
                 <Text style={styles.buttonText}>Seleccionar Imagen</Text>
