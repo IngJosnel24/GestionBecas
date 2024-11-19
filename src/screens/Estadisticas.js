@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Button } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
+import { jsPDF } from "jspdf";
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 const Estadisticas = () => {
   const [chartData, setChartData] = useState({ labels: [], datasets: [{ data: [] }] });
@@ -32,6 +35,36 @@ const Estadisticas = () => {
     setChartData({ labels, datasets: [{ data }] });
   }, []);
 
+  const generateAndSharePDF = async () => {
+    const doc = new jsPDF();
+
+    // Título
+    doc.setFontSize(16);
+    doc.text("Estadísticas de Becas por Carrera", 10, 10);
+
+    // Agregar datos de las carreras al PDF
+    chartData.labels.forEach((label, index) => {
+      const count = chartData.datasets[0].data[index];
+      doc.text(`${label}: ${count} becas aceptadas`, 10, 20 + index * 10);
+    });
+
+    // Generar el archivo PDF como Base64
+    const pdfBase64 = doc.output("datauristring").split(",")[1];
+
+    // Guardar el archivo en el sistema de archivos
+    const pdfUri = `${FileSystem.documentDirectory}EstadisticasBecas.pdf`;
+    await FileSystem.writeAsStringAsync(pdfUri, pdfBase64, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    // Compartir el archivo PDF
+    if (await Sharing.isAvailableAsync()) {
+      await Sharing.shareAsync(pdfUri);
+    } else {
+      alert("La funcionalidad para compartir no está disponible en este dispositivo.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Carreras con Becas Aceptadas</Text>
@@ -53,6 +86,8 @@ const Estadisticas = () => {
       ) : (
         <Text style={styles.loading}>Cargando datos...</Text>
       )}
+
+      <Button title="Generar y Compartir PDF" onPress={generateAndSharePDF} />
     </View>
   );
 };
