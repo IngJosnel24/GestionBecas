@@ -1,24 +1,65 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const ListaBecas = ({ acceptedApplications }) => {
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Image, Alert } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { appFirebase } from '../../db/firebaseconfig';
+
+const ListaBecas = () => {
   const [searchText, setSearchText] = useState('');
+  const [becas, setBecas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const db = getFirestore(appFirebase);
+
+  const cargarBecas = async () => {
+    try {
+      const snapshot = await getDocs(collection(db, 'Becas'));
+      const becasData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setBecas(becasData);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error al cargar las becas:', error);
+      Alert.alert('Error', 'No se pudieron cargar las becas.');
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    cargarBecas();
+  }, []);
 
   const handleSearch = (text) => {
     setSearchText(text);
   };
 
+  const filteredBecas = becas.filter(beca => {
+    const searchLower = searchText.toLowerCase();
+    return (
+      beca.nombre?.toLowerCase().includes(searchLower) ||
+      beca.apellidos?.toLowerCase().includes(searchLower) ||
+      beca.cedula?.toLowerCase().includes(searchLower) ||
+      beca.beca?.toLowerCase().includes(searchLower) ||
+      beca.carrera?.toLowerCase().includes(searchLower)
+    );
+  });
+
   const renderItem = ({ item }) => (
     <View style={styles.card}>
-      <Image source={{ uri: item.imagen }} style={styles.image} />
+      <Image 
+        source={{ uri: item.imagen }} 
+        style={styles.image}
+      />
       <View style={styles.infoContainer}>
         <Text style={styles.name}>{item.nombre} {item.apellidos}</Text>
         <Text style={styles.details}>Cédula: {item.cedula}</Text>
         <Text style={styles.details}>Sexo: {item.sexo}</Text>
         <Text style={styles.details}>Carrera: {item.carrera}</Text>
         <Text style={styles.details}>Beca: {item.beca}</Text>
-        <Text style={styles.details}>Estado: Aceptada</Text>
+        <Text style={styles.details}>Estado: {item.status}</Text>
+        <Text style={styles.details}>Fecha de Aceptación: {item.fechaAceptacion?.toDate().toLocaleDateString()}</Text>
       </View>
     </View>
   );
@@ -34,16 +75,22 @@ const ListaBecas = ({ acceptedApplications }) => {
           value={searchText}
           onChangeText={handleSearch}
         />
-        <TouchableOpacity>
-          <Ionicons name="filter" size={24} color="gray" style={styles.icon} />
+        <TouchableOpacity onPress={cargarBecas}>
+          <Ionicons name="refresh" size={24} color="gray" style={styles.icon} />
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={acceptedApplications}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContainer}
-      />
+      {loading ? (
+        <Text style={styles.loadingText}>Cargando becas...</Text>
+      ) : (
+        <FlatList
+          data={filteredBecas}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          contentContainerStyle={styles.listContainer}
+          refreshing={loading}
+          onRefresh={cargarBecas}
+        />
+      )}
     </View>
   );
 };
@@ -113,6 +160,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
     marginBottom: 2,
+  },
+  loadingText: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#777',
   },
 });
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
-import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { appFirebase } from '../../db/firebaseconfig';
 import { useNavigation } from '@react-navigation/native';
 
@@ -33,11 +33,59 @@ export default function ListadoSolicitudes({ onAcceptApplication }) {
     const handleAccept = async (item) => {
         try {
             const docRef = doc(db, 'Solicitantes', item.id);
-            await updateDoc(docRef, { status: 'Aceptada' });
-            Alert.alert('Éxito', `La solicitud de ${item.nombre} ha sido aceptada.`);
-            onAcceptApplication(item);
-            setSolicitantes(solicitantes.filter(sol => sol.id !== item.id));
-            navigation.navigate('Inicio');
+            
+            const becaData = {
+                nombre: item.nombre,
+                apellidos: item.apellidos,
+                cedula: item.cedula,
+                sexo: item.sexo,
+                carrera: item.carrera,
+                beca: item.beca,
+                imagen: item.imagen,
+                fechaAceptacion: new Date(),
+                status: 'Aceptada'
+            };
+    
+            // Primero agregamos a Becas
+            await addDoc(collection(db, 'Becas'), becaData);
+            
+            // Luego eliminamos de Solicitantes
+            await deleteDoc(docRef);
+            
+            // Actualizamos el estado local para remover la solicitud
+            setSolicitantes(prevSolicitantes => 
+                prevSolicitantes.filter(sol => sol.id !== item.id)
+            );
+    
+            Alert.alert(
+                'Éxito', 
+                `La solicitud de ${item.nombre} ha sido aceptada.`,
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            if (onAcceptApplication) {
+                                onAcceptApplication(item);
+                            }
+                            // Intentar diferentes nombres de ruta comunes
+                            try {
+                                navigation.navigate('ListaBecas');
+                            } catch (e) {
+                                try {
+                                    navigation.navigate('ListadoBecas');
+                                } catch (e) {
+                                    try {
+                                        navigation.navigate('Becas');
+                                    } catch (e) {
+                                        console.warn('No se pudo navegar automáticamente');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            );
+            
         } catch (error) {
             console.error('Error al aceptar la solicitud:', error);
             Alert.alert('Error', 'No se pudo aceptar la solicitud.');
@@ -47,7 +95,9 @@ export default function ListadoSolicitudes({ onAcceptApplication }) {
     const deleteSolicitud = async (id) => {
         try {
             await deleteDoc(doc(db, 'Solicitantes', id));
-            setSolicitantes(prevSolicitantes => prevSolicitantes.filter(solicitante => solicitante.id !== id));
+            setSolicitantes(prevSolicitantes => 
+                prevSolicitantes.filter(solicitante => solicitante.id !== id)
+            );
             Alert.alert("Éxito", "Solicitud eliminada con éxito");
         } catch (error) {
             console.error("Error al eliminar la solicitud: ", error);
@@ -102,6 +152,7 @@ export default function ListadoSolicitudes({ onAcceptApplication }) {
         </View>
     );
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -198,3 +249,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
+
