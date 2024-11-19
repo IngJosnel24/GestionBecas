@@ -115,7 +115,7 @@ export default function MisSolicitudes() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.titulo}>Nueva Solicitud</Text>
+            <Text style={styles.titulo}>Nueva solicitud</Text>
 
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Nombre:</Text>
@@ -197,12 +197,12 @@ export default function MisSolicitudes() {
             </View>
 
             <TouchableOpacity style={styles.button} onPress={pickImage}>
-                <Text style={styles.buttonText}>Seleccionar Imagen</Text>
+                <Text style={styles.buttonText}>Seleccionar imagen</Text>
             </TouchableOpacity>
             {image && <Image source={{ uri: image }} style={styles.image} />}
 
             <TouchableOpacity style={styles.submitButton} onPress={validarDatos}>
-                <Text style={styles.submitButtonText}>Registrar Solicitud</Text>
+                <Text style={styles.submitButtonText}>Registrar solicitud</Text>
             </TouchableOpacity>
         </ScrollView>
     );
@@ -211,7 +211,7 @@ export default function MisSolicitudes() {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        backgroundColor: "#f7f7f7", // Fondo gris claro
+        backgroundColor: "#f7f7f7", 
         flexGrow: 1,
     },
     titulo: {
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         marginVertical: 20,
-        color: "#4a148c", // Azul índigo oscuro
+        color: "#1a237e",
     },
     inputContainer: {
         marginBottom: 20,
@@ -227,20 +227,20 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         marginBottom: 8,
-        color: "#4a4a4a", // Gris oscuro
+        color: "#4a4a4a",
         fontWeight: "bold",
     },
     TextInput: {
-        borderColor: "#d32f2f", // Rojo escarlata para bordes
+        borderColor: "#d32f2f", 
         borderWidth: 2,
         borderRadius: 10,
         padding: 12,
         fontSize: 16,
-        backgroundColor: "#fff", // Fondo blanco para claridad
+        backgroundColor: "#fff", 
         width: "100%",
     },
     errorText: {
-        color: "#d32f2f", // Rojo escarlata para resaltar errores
+        color: "#d32f2f", 
         marginTop: 4,
         fontSize: 14,
     },
@@ -250,11 +250,11 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         alignSelf: "center",
         borderRadius: 10,
-        borderColor: "#ffd600", // Amarillo vibrante
+        borderColor: "#ffeb3b", 
         borderWidth: 3,
     },
     button: {
-        backgroundColor: "#ffd600", // Amarillo vibrante para botones de acción secundaria
+        backgroundColor: "#1a237e", 
         paddingVertical: 12,
         paddingHorizontal: 20,
         borderRadius: 10,
@@ -262,12 +262,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     buttonText: {
-        color: "#4a148c", // Azul índigo oscuro
+        color: "#ffff", 
         fontSize: 16,
         fontWeight: "bold",
     },
     submitButton: {
-        backgroundColor: "#4a148c", // Azul índigo oscuro
+        backgroundColor: "#1a7e36",
         paddingVertical: 12,
         paddingHorizontal: 20,
         borderRadius: 10,
@@ -275,15 +275,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     submitButtonText: {
-        color: "#ffd600", // Amarillo vibrante
+        color: "#ffff", 
         fontSize: 18,
         fontWeight: "bold",
     },
     picker: {
-        borderColor: "#d32f2f", // Rojo escarlata
+        borderColor: "#d32f2f", 
         borderWidth: 2,
         borderRadius: 10,
-        backgroundColor: "#fff", // Fondo blanco para contraste
+        backgroundColor: "#fff", 
         width: "100%",
     },
 });

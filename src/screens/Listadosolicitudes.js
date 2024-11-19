@@ -135,7 +135,7 @@ export default function ListadoSolicitudes({ onAcceptApplication }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.titulo}>Listado de Solicitudes</Text>
+            <Text style={styles.titulo}>Listado de solicitudes</Text>
             {loading ? (
                 <Text style={styles.loadingText}>Cargando...</Text>
             ) : (
@@ -147,7 +147,7 @@ export default function ListadoSolicitudes({ onAcceptApplication }) {
                 />
             )}
             <TouchableOpacity style={styles.reloadButton} onPress={cargarSolicitudes}>
-                <Text style={styles.reloadButtonText}>Recargar Solicitudes</Text>
+                <Text style={styles.reloadButtonText}>Recargar solicitudes</Text>
             </TouchableOpacity>
         </View>
     );

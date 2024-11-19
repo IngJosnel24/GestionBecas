@@ -149,7 +149,7 @@ const ListaBecas = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Listado de Becas</Text>
+      <Text style={styles.titulo}>Listado de becas</Text>
       <View style={styles.searchContainer}>
         <Ionicons name="search" size={24} color="gray" style={styles.icon} />
         <TextInput

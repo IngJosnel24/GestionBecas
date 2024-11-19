@@ -36,7 +36,7 @@ const Estadisticas = () => {
     const doc = new jsPDF();
 
     doc.setFontSize(16);
-    doc.text("Estadísticas de Becas por Carrera", 10, 10);
+    doc.text("Estadísticas de becas por carrera", 10, 10);
 
     chartData.labels.forEach((label, index) => {
       const count = chartData.datasets[0].data[index];
@@ -59,20 +59,20 @@ const Estadisticas = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Carreras con Becas Aceptadas</Text>
+      <Text style={styles.title}>Carreras con becas aceptadas</Text>
       {chartData.labels.length > 0 ? (
         <BarChart
           data={chartData}
           width={screenWidth - 32}
           height={220}
           chartConfig={{
-            backgroundColor: "#f7f7f7",
-            backgroundGradientFrom: "#4a148c", // Azul índigo oscuro
-            backgroundGradientTo: "#d32f2f", // Rojo escarlata
+            backgroundColor: "#ffffff",
+            backgroundGradientFrom: "#ffffff",
+            backgroundGradientTo: "#f2f2f2",
             decimalPlaces: 0,
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            barPercentage: 0.6,
+            color: (opacity = 1) => `rgba(54, 162, 235, ${opacity})`, // Azul suave para las barras
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Negro para las etiquetas
+            barPercentage: 0.7,
           }}
           style={styles.chart}
         />
@@ -81,7 +81,7 @@ const Estadisticas = () => {
       )}
 
       <TouchableOpacity style={styles.button} onPress={generateAndSharePDF}>
-        <Text style={styles.buttonText}>Generar y Compartir PDF</Text>
+        <Text style={styles.buttonText}>Generar y compartir PDF</Text>
       </TouchableOpacity>
     </View>
   );
@@ -91,14 +91,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f7f7f7", // Fondo gris claro
+    backgroundColor: "#f7f7f7",
   },
   title: {
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
-    color: "#4a148c", // Azul índigo oscuro
+    color: "#1e88e5", // Azul
   },
   chart: {
     marginVertical: 8,
@@ -108,10 +108,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     fontSize: 16,
-    color: "#555", // Gris oscuro
+    color: "#555",
   },
   button: {
-    backgroundColor: "#ffd600", // Amarillo vibrante
+    backgroundColor: "#1e88e5", // Azul más fuerte
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   buttonText: {
-    color: "#4a148c", // Azul índigo oscuro
+    color: "#fff", // Blanco para contraste
     fontSize: 16,
     fontWeight: "bold",
   },
