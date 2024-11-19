@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
 import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { appFirebase } from '../../db/firebaseconfig';
+import { useNavigation } from '@react-navigation/native';
 
-export default function ListadoSolicitudes() {
+export default function ListadoSolicitudes({ onAcceptApplication }) {
     const db = getFirestore(appFirebase);
     const [solicitantes, setSolicitantes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigation = useNavigation();
 
     const cargarSolicitudes = async () => {
         try {
@@ -33,7 +35,9 @@ export default function ListadoSolicitudes() {
             const docRef = doc(db, 'Solicitantes', item.id);
             await updateDoc(docRef, { status: 'Aceptada' });
             Alert.alert('Éxito', `La solicitud de ${item.nombre} ha sido aceptada.`);
-            cargarSolicitudes();
+            onAcceptApplication(item);
+            setSolicitantes(solicitantes.filter(sol => sol.id !== item.id));
+            navigation.navigate('Inicio');
         } catch (error) {
             console.error('Error al aceptar la solicitud:', error);
             Alert.alert('Error', 'No se pudo aceptar la solicitud.');
@@ -98,7 +102,6 @@ export default function ListadoSolicitudes() {
         </View>
     );
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
