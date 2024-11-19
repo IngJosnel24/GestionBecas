@@ -156,97 +156,100 @@ export default function ListadoSolicitudes({ onAcceptApplication }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        padding: 10,
+        backgroundColor: '#f5f5f5', // Gris claro para fondo general
+        padding: 15,
     },
     titulo: {
-        fontSize: 24,
-        fontWeight: 'bold',
+        fontSize: 26,
+        fontWeight: '700',
         textAlign: 'center',
         marginBottom: 20,
-        color: '#333',
+        color: '#1a237e', // Azul índigo
     },
     loadingText: {
         fontSize: 18,
         textAlign: 'center',
         marginTop: 20,
-        color: '#777',
+        color: '#757575', // Gris medio
     },
     listContainer: {
         paddingBottom: 20,
     },
     card: {
         flexDirection: 'row',
-        backgroundColor: '#f9f9f9',
-        borderRadius: 8,
+        backgroundColor: '#ffffff', // Blanco para contraste
+        borderRadius: 10,
         padding: 15,
-        marginBottom: 10,
+        marginBottom: 15,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
+        shadowRadius: 5,
+        elevation: 4,
     },
     image: {
         width: 80,
         height: 80,
-        borderRadius: 40,
+        borderRadius: 10,
         marginRight: 15,
+        borderWidth: 1,
+        borderColor: '#1a237e', // Azul índigo para el borde
     },
     infoContainer: {
         flex: 1,
     },
     name: {
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: '700',
         marginBottom: 5,
-        color: '#333',
+        color: '#1a237e', // Azul índigo
     },
     details: {
         fontSize: 14,
-        color: '#555',
-        marginBottom: 2,
+        color: '#616161', // Gris oscuro para detalles
+        marginBottom: 3,
     },
     actionsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 10,
+        marginTop: 15,
     },
     acceptButton: {
-        backgroundColor: '#28a745',
+        backgroundColor: '#c62828', // Rojo escarlata
         paddingVertical: 10,
         paddingHorizontal: 20,
-        borderRadius: 20,
+        borderRadius: 25,
         alignItems: 'center',
         flex: 1,
         marginRight: 5,
     },
     rejectButton: {
-        backgroundColor: '#dc3545',
+        backgroundColor: '#ff8f00', // Amarillo oscuro
         paddingVertical: 10,
         paddingHorizontal: 20,
-        borderRadius: 20,
+        borderRadius: 25,
         alignItems: 'center',
         flex: 1,
         marginLeft: 5,
     },
     buttonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: '600',
+        color: '#fff', // Blanco para texto
+        fontSize: 14,
+        fontWeight: '700',
         textTransform: 'uppercase',
     },
     reloadButton: {
-        backgroundColor: '#705b14',
+        backgroundColor: '#1a237e', // Azul índigo
         padding: 15,
-        borderRadius: 8,
+        borderRadius: 10,
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 20,
     },
     reloadButtonText: {
-        color: '#fff',
+        color: '#fff', // Blanco para texto
         fontSize: 16,
         fontWeight: 'bold',
     },
 });
+
 

@@ -7,140 +7,154 @@ import { Picker } from '@react-native-picker/picker';
 
 export default function MisSolicitudes() {
     const db = getFirestore(appFirebase);
-    const [Solicitantes, setSolicitantes] = useState({
+    const [solicitantes, setSolicitantes] = useState({
         nombre: "",
         apellidos: "",
         cedula: "",
         sexo: "",
         carrera: "",
         beca: "",
-        imagen: "https://example.com/default-image.png", // Imagen predeterminada
+        imagen: null,
     });
     const [errors, setErrors] = useState({});
     const [image, setImage] = useState(null);
 
-    const establecerEstado = (nombre, value) => {
-        setSolicitantes({ ...Solicitantes, [nombre]: value });
+    const establecerEstado = (campo, valor) => {
+        setSolicitantes({ ...solicitantes, [campo]: valor });
     };
 
     const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [3, 3],
-            quality: 1,
-        });
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
+        try {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [3, 3],
+                quality: 1,
+            });
+            if (!result.canceled) {
+                setImage(result.assets[0].uri);
+            }
+        } catch (error) {
+            Alert.alert("Error", "No se pudo seleccionar la imagen.");
         }
     };
 
     const validarDatos = () => {
-        let valid = true;
-        let newErrors = {};
+        const nuevosErrores = {};
+        let valido = true;
+
         if (!image) {
-            Alert.alert('Imagen requerida', 'Por favor, selecciona una imagen para la solicitud.');
-            return;
+            Alert.alert("Imagen requerida", "Por favor, selecciona una imagen.");
+            valido = false;
         }
 
-        // Verificar que todos los campos estén llenos
-        if (!Solicitantes.nombre.trim()) {
-            newErrors.nombre = 'El nombre es obligatorio';
-            valid = false;
+        // Validar campos obligatorios
+        if (!solicitantes.nombre.trim()) {
+            nuevosErrores.nombre = "El nombre es obligatorio.";
+            valido = false;
         }
-        if (!Solicitantes.apellidos.trim()) {
-            newErrors.apellidos = 'Los apellidos son obligatorios';
-            valid = false;
+        if (!solicitantes.apellidos.trim()) {
+            nuevosErrores.apellidos = "Los apellidos son obligatorios.";
+            valido = false;
         }
-        if (!Solicitantes.cedula.trim()) {
-            newErrors.cedula = 'La cédula es obligatoria';
-            valid = false;
+        if (!solicitantes.cedula.trim()) {
+            nuevosErrores.cedula = "La cédula es obligatoria.";
+            valido = false;
         }
-        if (!Solicitantes.sexo.trim()) {
-            newErrors.sexo = 'El sexo es obligatorio';
-            valid = false;
+        if (!solicitantes.sexo) {
+            nuevosErrores.sexo = "El sexo es obligatorio.";
+            valido = false;
         }
-        if (!Solicitantes.carrera.trim()) {
-            newErrors.carrera = 'La carrera es obligatoria';
-            valid = false;
+        if (!solicitantes.carrera) {
+            nuevosErrores.carrera = "La carrera es obligatoria.";
+            valido = false;
         }
-        if (!Solicitantes.beca.trim()) {
-            newErrors.beca = 'El tipo de beca es obligatorio';
-            valid = false;
+        if (!solicitantes.beca) {
+            nuevosErrores.beca = "El tipo de beca es obligatorio.";
+            valido = false;
         }
 
-        setErrors(newErrors);
-        if (valid) {
+        setErrors(nuevosErrores);
+
+        if (valido) {
             guardarSolicitud({
-                ...Solicitantes,
-                imagen: image || Solicitantes.imagen,
+                ...solicitantes,
+                imagen: image,
             });
-            setSolicitantes({
-                nombre: "",
-                apellidos: "",
-                cedula: "",
-                sexo: "",
-                carrera: "",
-                beca: "",
-                imagen: "https://example.com/default-image.png",
-            });
-            setImage(null);
-            Alert.alert('Éxito', 'Solicitud registrada correctamente');
-            setErrors({});
+            resetFormulario();
         }
     };
 
-   const guardarSolicitud = async (Solicitantes) => {
-    try {
-        const docRef = await addDoc(collection(db, "Solicitantes"), {
-            ...Solicitantes,
-            status: 'Pendiente', // Estado inicial de la solicitud
-        });
-        console.log("Documento escrito con ID: ", docRef.id);
-    } catch (e) {
-        console.error("Error al añadir el documento: ", e);
-    }
-};
+    const guardarSolicitud = async (datos) => {
+        try {
+            const docRef = await addDoc(collection(db, "Solicitantes"), {
+                ...datos,
+                status: "Pendiente",
+            });
+            console.log("Documento añadido con ID:", docRef.id);
+            Alert.alert("Éxito", "Solicitud registrada correctamente.");
+        } catch (error) {
+            console.error("Error al guardar la solicitud:", error);
+            Alert.alert("Error", "No se pudo registrar la solicitud.");
+        }
+    };
 
-  
+    const resetFormulario = () => {
+        setSolicitantes({
+            nombre: "",
+            apellidos: "",
+            cedula: "",
+            sexo: "",
+            carrera: "",
+            beca: "",
+            imagen: null,
+        });
+        setImage(null);
+        setErrors({});
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.titulo}>Nueva Solicitud</Text>
+
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Nombre:</Text>
                 <TextInput
                     style={styles.TextInput}
                     placeholder="Ingrese su nombre"
-                    value={Solicitantes.nombre}
-                    onChangeText={(value) => establecerEstado("nombre", value)}
+                    value={solicitantes.nombre}
+                    onChangeText={(valor) => establecerEstado("nombre", valor)}
                 />
                 {errors.nombre && <Text style={styles.errorText}>{errors.nombre}</Text>}
             </View>
+
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Apellidos:</Text>
                 <TextInput
                     style={styles.TextInput}
                     placeholder="Ingrese sus apellidos"
-                    value={Solicitantes.apellidos}
-                    onChangeText={(value) => establecerEstado("apellidos", value)}
+                    value={solicitantes.apellidos}
+                    onChangeText={(valor) => establecerEstado("apellidos", valor)}
                 />
                 {errors.apellidos && <Text style={styles.errorText}>{errors.apellidos}</Text>}
             </View>
+
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Cédula:</Text>
                 <TextInput
                     style={styles.TextInput}
                     placeholder="Ingrese su cédula"
-                    value={Solicitantes.cedula}
-                    onChangeText={(value) => establecerEstado("cedula", value)}
+                    value={solicitantes.cedula}
+                    onChangeText={(valor) => establecerEstado("cedula", valor)}
                 />
                 {errors.cedula && <Text style={styles.errorText}>{errors.cedula}</Text>}
             </View>
+
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Sexo:</Text>
                 <Picker
-                    selectedValue={Solicitantes.sexo}
-                    onValueChange={(itemValue) => establecerEstado("sexo", itemValue)}
+                    selectedValue={solicitantes.sexo}
+                    onValueChange={(valor) => establecerEstado("sexo", valor)}
                     style={styles.TextInput}
                 >
                     <Picker.Item label="Seleccione su sexo" value="" />
@@ -149,40 +163,44 @@ export default function MisSolicitudes() {
                 </Picker>
                 {errors.sexo && <Text style={styles.errorText}>{errors.sexo}</Text>}
             </View>
+
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Carrera:</Text>
                 <Picker
-                    selectedValue={Solicitantes.carrera}
-                    onValueChange={(itemValue) => establecerEstado("carrera", itemValue)}
+                    selectedValue={solicitantes.carrera}
+                    onValueChange={(valor) => establecerEstado("carrera", valor)}
                     style={styles.TextInput}
                 >
                     <Picker.Item label="Seleccione su carrera" value="" />
-                    <Picker.Item label="Licenciatura en Derecho" value="Licenciatura en Derecho" />
-                    <Picker.Item label="MasculinoLicenciatura en Psicología" value="Licenciatura en Psicología" />
+                    <Picker.Item label="Derecho" value="Derecho" />
+                    <Picker.Item label="Psicología" value="Psicología" />
                     <Picker.Item label="Ingeniería Civil" value="Ingeniería Civil" />
                     <Picker.Item label="Ingeniería Informática" value="Ingeniería Informática" />
                     <Picker.Item label="Medicina" value="Medicina" />
                 </Picker>
-                {errors.sexo && <Text style={styles.errorText}>{errors.sexo}</Text>}
+                {errors.carrera && <Text style={styles.errorText}>{errors.carrera}</Text>}
             </View>
+
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Tipo de beca:</Text>
                 <Picker
-                    selectedValue={Solicitantes.beca}
-                    onValueChange={(itemValue) => establecerEstado("beca", itemValue)}
+                    selectedValue={solicitantes.beca}
+                    onValueChange={(valor) => establecerEstado("beca", valor)}
                     style={styles.TextInput}
                 >
-                    <Picker.Item label="Seleccione su carrera" value="" />
+                    <Picker.Item label="Seleccione el tipo de beca" value="" />
                     <Picker.Item label="Académica" value="Académica" />
                     <Picker.Item label="Transporte" value="Transporte" />
                     <Picker.Item label="Interna" value="Interna" />
                 </Picker>
-                {errors.sexo && <Text style={styles.errorText}>{errors.sexo}</Text>}
+                {errors.beca && <Text style={styles.errorText}>{errors.beca}</Text>}
             </View>
+
             <TouchableOpacity style={styles.button} onPress={pickImage}>
                 <Text style={styles.buttonText}>Seleccionar Imagen</Text>
             </TouchableOpacity>
             {image && <Image source={{ uri: image }} style={styles.image} />}
+
             <TouchableOpacity style={styles.submitButton} onPress={validarDatos}>
                 <Text style={styles.submitButtonText}>Registrar Solicitud</Text>
             </TouchableOpacity>
@@ -193,14 +211,15 @@ export default function MisSolicitudes() {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        backgroundColor: '#fff',
+        backgroundColor: "#f7f7f7", // Fondo gris claro
+        flexGrow: 1,
     },
     titulo: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
+        fontSize: 26,
+        fontWeight: "bold",
+        textAlign: "center",
         marginVertical: 20,
-        color: '#333',
+        color: "#4a148c", // Azul índigo oscuro
     },
     inputContainer: {
         marginBottom: 20,
@@ -208,51 +227,65 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         marginBottom: 8,
-        color: '#333',
+        color: "#4a4a4a", // Gris oscuro
+        fontWeight: "bold",
     },
     TextInput: {
-        borderColor: '#ddd',
-        borderWidth: 1,
-        borderRadius: 8,
+        borderColor: "#d32f2f", // Rojo escarlata para bordes
+        borderWidth: 2,
+        borderRadius: 10,
         padding: 12,
         fontSize: 16,
-        width: '100%',
+        backgroundColor: "#fff", // Fondo blanco para claridad
+        width: "100%",
     },
     errorText: {
-        color: 'red',
+        color: "#d32f2f", // Rojo escarlata para resaltar errores
         marginTop: 4,
+        fontSize: 14,
     },
     image: {
         width: 150,
         height: 150,
         marginVertical: 10,
-        alignSelf: 'center',
-        borderRadius: 8,
+        alignSelf: "center",
+        borderRadius: 10,
+        borderColor: "#ffd600", // Amarillo vibrante
+        borderWidth: 3,
     },
     button: {
-        backgroundColor: '#b59f5e',
+        backgroundColor: "#ffd600", // Amarillo vibrante para botones de acción secundaria
         paddingVertical: 12,
         paddingHorizontal: 20,
-        borderRadius: 8,
+        borderRadius: 10,
         marginTop: 10,
-        alignItems: 'center',
+        alignItems: "center",
     },
     buttonText: {
-        color: '#fff',
+        color: "#4a148c", // Azul índigo oscuro
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: "bold",
     },
     submitButton: {
-        backgroundColor: '#705b14',
+        backgroundColor: "#4a148c", // Azul índigo oscuro
         paddingVertical: 12,
         paddingHorizontal: 20,
-        borderRadius: 8,
+        borderRadius: 10,
         marginTop: 20,
-        alignItems: 'center',
+        alignItems: "center",
     },
     submitButtonText: {
-        color: '#fff',
+        color: "#ffd600", // Amarillo vibrante
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: "bold",
+    },
+    picker: {
+        borderColor: "#d32f2f", // Rojo escarlata
+        borderWidth: 2,
+        borderRadius: 10,
+        backgroundColor: "#fff", // Fondo blanco para contraste
+        width: "100%",
     },
 });
+
+

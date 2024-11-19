@@ -177,105 +177,117 @@ const ListaBecas = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f8f9fa',
   },
   titulo: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 16,
-    marginTop: 30,
+    marginVertical: 20,
+    color: '#1a237e', // Azul índigo fuerte
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
-    marginTop: 10,
+    backgroundColor: '#e8eaf6', // Azul índigo muy claro
+    borderRadius: 8,
+    paddingHorizontal: 10,
   },
   searchInput: {
     flex: 1,
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
+    borderWidth: 0,
     borderRadius: 8,
-    paddingHorizontal: 20,
-    marginRight: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: '#212121',
   },
   icon: {
-    marginHorizontal: 8,
+    color: '#5c6bc0', // Azul índigo intermedio
   },
   listContainer: {
     paddingBottom: 20,
   },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    marginBottom: 12,
     padding: 15,
-    marginBottom: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+    borderLeftWidth: 5,
+    borderLeftColor: '#c62828', // Rojo escarlata
   },
   image: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    marginRight: 15,
+    marginBottom: 10,
+    alignSelf: 'center',
+    borderWidth: 2,
+    borderColor: '#ffeb3b', // Amarillo vibrante
   },
   infoContainer: {
-    flex: 1,
+    alignItems: 'center',
+    marginBottom: 10,
   },
   name: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#333',
+    fontWeight: '600',
+    color: '#1a237e',
   },
   details: {
     fontSize: 14,
-    color: '#555',
-    marginBottom: 2,
+    color: '#424242',
+    marginVertical: 2,
   },
   expandedContainer: {
     marginTop: 10,
     borderTopWidth: 1,
-    borderTopColor: '#ccc',
+    borderTopColor: '#cfd8dc', // Gris claro
     paddingTop: 10,
+    backgroundColor: '#eceff1', // Fondo gris muy claro
+    borderRadius: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: '#b0bec5', // Gris azulado
     borderRadius: 8,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     marginBottom: 10,
+    backgroundColor: '#fff',
+    fontSize: 14,
   },
   button: {
-    backgroundColor: '#4CAF50',
-    padding: 10,
+    backgroundColor: '#1565c0', // Azul brillante
+    paddingVertical: 10,
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 10,
   },
   deleteButton: {
-    backgroundColor: '#F44336',
+    backgroundColor: '#d32f2f', // Rojo intenso
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontSize: 16,
   },
   loadingText: {
     fontSize: 18,
     textAlign: 'center',
     marginTop: 20,
-    color: '#777',
+    color: '#757575', // Gris medio
   },
 });
 
 export default ListaBecas;
+
